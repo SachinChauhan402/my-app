@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import IconButton from '@mui/material/IconButton';
+import Badge from '@mui/material/Badge';
+
 
 // ############################### counter
 
@@ -14,14 +17,23 @@ export function Counter() {
 
   return (
     <div className='counter-container'>
-      {like > 9 ? <p>You have won the people's ❤️😍</p> : null}
+      {/* {like > 9 ? <p>You have won the people's ❤️😍</p> : null} */}
 
-      <progress className='counter-progress-container' max="100" value={Number.isNaN(likePercent) ? 0 : likePercent}></progress>
+      {/* <progress className='counter-progress-container' max="100" value={Number.isNaN(likePercent) ? 0 : likePercent}></progress> */}
 
 
       <div className='counter-button-container'>
-        <button style={styles} onClick={() => setLike(like + 1)}>👍 {like}</button>
-        <button style={dislikestyle} onClick={() => setDislike(dislike + 1)}>👎 {dislike}</button>
+      <IconButton aria-label="delete" onClick={() => setLike(like + 1)}>
+      <Badge badgeContent={like} color="success">
+      👍</Badge></IconButton>
+      
+
+      <IconButton aria-label="delete" onClick={() => setDislike(dislike + 1)}>
+      <Badge badgeContent={dislike} color="error">
+      👎</Badge></IconButton>
+        
+      
+      
       </div>
     </div>
   );

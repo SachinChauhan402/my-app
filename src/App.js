@@ -3,11 +3,72 @@ import './App.css';
 import React from 'react';
 import { ColorGame } from './ColorGame';
 import { MovieList } from './MovieList';
+import { useState } from 'react';
+import { AddMovie } from './AddMovie';
+import { Routes, Route, Link, Navigate } from "react-router-dom";
 
+import { styled, alpha } from '@mui/material/styles';
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import InputBase from '@mui/material/InputBase';
+import MenuIcon from '@mui/icons-material/Menu';
+import SearchIcon from '@mui/icons-material/Search';
+
+const Search = styled('div')(({ theme }) => ({
+    position: 'relative',
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: alpha(theme.palette.common.white, 0.15),
+    '&:hover': {
+      backgroundColor: alpha(theme.palette.common.white, 0.25),
+    },
+    marginLeft: 0,
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      marginLeft: theme.spacing(1),
+      width: 'auto',
+    },
+  }));
+  
+  const SearchIconWrapper = styled('div')(({ theme }) => ({
+    padding: theme.spacing(0, 2),
+    height: '100%',
+    position: 'absolute',
+    pointerEvents: 'none',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  }));
+  
+  const StyledInputBase = styled(InputBase)(({ theme }) => ({
+    color: 'inherit',
+    '& .MuiInputBase-input': {
+      padding: theme.spacing(1, 1, 1, 0),
+      // vertical padding + font size from searchIcon
+      paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+      transition: theme.transitions.create('width'),
+      width: '100%',
+      [theme.breakpoints.up('sm')]: {
+        width: '12ch',
+        '&:focus': {
+          width: '20ch',
+        },
+      },
+    },
+  }));
+  
+   function SearchAppBar() {
+    return (
+      <Box sx={{ flexGrow: 1 }}>
+      </Box>
+    );
+  }
 
 
 function App() {
-  const movies = [
+  const [moviesList, setmovieList] = useState([
     {
         name: "Ratatouille",
         poster: "https://resizing.flixster.com/gL_JpWcD7sNHNYSwI1ff069Yyug=/ems.ZW1zLXByZC1hc3NldHMvbW92aWVzLzc4ZmJhZjZiLTEzNWMtNDIwOC1hYzU1LTgwZjE3ZjQzNTdiNy5qcGc=",
@@ -92,15 +153,91 @@ function App() {
     
     },
     
-]
-  return (
-    <div className="App">
+]);
 
-    <MovieList movies={movies} />
-    {/* <ColorGame /> */}
+const [search , setSearch] = useState("");
+
+  return (
+
+    <div className="App">
+        <AppBar position="static">
+          <Toolbar>
+            <Typography
+              variant="h6"
+              noWrap
+              component="div"
+              sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
+            >
+              Movie App
+            </Typography>
+            <Search>
+              <SearchIconWrapper>
+                <SearchIcon />
+              </SearchIconWrapper>
+              <StyledInputBase value={search}
+              onChange={(event) => setSearch(event.target.value)}
+                placeholder="Search…"
+                inputProps={{ 'aria-label': 'search' }}
+              />
+            </Search>
+          </Toolbar>
+        </AppBar>
+
+    <ul>
+        <li><Link to="/movies">Movies</Link></li>
+        <li><Link to="/color-game">Color-Game</Link></li>
+        <li><Link to="/movies/add">Add Movies</Link></li>
+    </ul>
+
+
+
+    
+    <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/movies" element={
+        <MovieList movies=
+        {moviesList.filter(mv => mv.name.toLowerCase().includes(search.toLowerCase()))} />} />
+        <Route path="/redirect" element={<Navigate replace to ="/color-game"/>} />
+        
+        <Route path="/color-game" element={<ColorGame />} />
+        <Route path="/movies/add" element={ <AddMovie setmovieList= 
+        { setmovieList } moviesList= {moviesList} /> } />
+        <Route path="/404" element={<NotFound /> }/>
+        <Route path="*" element={<Navigate raplace to = "/404"/>} />
+    </Routes>
     
     </div>
   );
+}
+
+function NotFound(){
+    const styles = {
+        height: "400px",
+        width:"400px",
+        objectFit: "contain",
+        paddingLeft:"300px"
+    }
+    return(
+        <img style={ styles } src="https://img.freepik.com/premium-vector/404-page-found-giraffe-hid-its-head-tree-web-surfing-web-page-search-error_652761-150.jpg?w=740" alt="404 page"/>
+        
+    )
+}
+
+function Home() {
+    return(
+        <div>
+            <h1>Welcome to the Home page 😍😂😒😣</h1>
+        </div>
+    )
+}
+
+function About() {
+    return(
+        <div>
+            <h1>hello, Welcome to the About page 🐒🦍⭐</h1>
+        </div>
+    )
 }
 
 
